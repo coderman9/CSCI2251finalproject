@@ -1,3 +1,9 @@
+/*
+Ben Anker in collaboration with AJ Fenton and Cesar Ornelas
+CSCI 2251 Final Project
+Used to represent a person
+*/
+
 import java.util.Date;
 public class Person
 {
