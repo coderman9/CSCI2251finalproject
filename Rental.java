@@ -1,3 +1,8 @@
+/*
+Ben Anker in collaboration with AJ Fenton and Cesar Ornelas
+CSCI 2251 Final Project
+Superclass of the other types of rentals
+*/
 public class Rental
 {
     private String address;
