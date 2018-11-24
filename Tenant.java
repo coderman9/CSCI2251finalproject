@@ -54,4 +54,5 @@ public class Tenant
     {
         return billAddress;
     }
+    //again, don't need update with the getters and setters
 }
