@@ -1,8 +1,8 @@
 import java.util.Date;
-public class DatePair
+public class DatePair extends Tuple
 {
     public DatePair(Date start, Date end)
     {
-        new Tuple<Date>(start, end);
+        super(start, end);
     }
 }
