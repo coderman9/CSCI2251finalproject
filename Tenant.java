@@ -7,7 +7,7 @@ import java.util.HashMap;
 public class Tenant
 {
     //made this a hashmap to support easy look ups by ID
-    private HashMap<int, Person> tenants=new HashMap<>();
+    private HashMap<Integer, Person> tenants=new HashMap<>();
     private int billableMember;
     private String billAddress;
     //I have reservations about representing the statement as a string in the tenant class but I'm 
@@ -16,11 +16,11 @@ public class Tenant
     public Tenant(Person[] people)
     {
         for(Person p : people)
-            this.tenants.put(p.getID, p);
+            this.tenants.put(p.getID(), p);
     }
     public void addPerson(Person p)
     {
-        this.tenants.put(p.getID, p);
+        this.tenants.put(p.getID(), p);
     }
     public void removePerson(int ID)
     {
@@ -28,13 +28,13 @@ public class Tenant
     }
     public int getBillableMember()
     {
-        return this.tenants.get(ID);
+        return this.billableMember;
     }
     public void setBillableMember(int ID)
     {
         this.billableMember=ID;
     }
-    public HashMap<int, Person> getPeople()
+    public HashMap<Integer, Person> getPeople()
     {
         return this.tenants;
     }
