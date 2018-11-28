@@ -11,6 +11,7 @@ public class Person
     private Date DOB;
     private int ID;
     private String address;
+    private String phoneNumber;
     public Person(String name, Date DOB, int ID)
     {
         this.name=name;this.DOB=DOB;this.ID=ID;
@@ -22,6 +23,14 @@ public class Person
     public String getAddress()
     {
         return address;
+    }
+    ublic void setPhoneNumber(String phoneNumber)
+    {
+        this.phoneNumber=phoneNumber;
+    }
+    public String getPhoneNumber()
+    {
+        return phoneNumber;
     }
     public void setName(String name)
     {
