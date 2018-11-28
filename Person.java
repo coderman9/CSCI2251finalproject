@@ -1,5 +1,5 @@
 /*
-Ben Anker in collaboration with AJ Fenton and Cesar Ornelas
+Ben Anker and AJ Fenton in collaboration with Cesar Ornelas
 CSCI 2251 Final Project
 Used to represent a person
 */
@@ -10,9 +10,18 @@ public class Person
     private String name;
     private Date DOB;
     private int ID;
+    private String address;
     public Person(String name, Date DOB, int ID)
     {
         this.name=name;this.DOB=DOB;this.ID=ID;
+    }
+    public void setAddress(String address)
+    {
+        this.address=address;
+    }
+    public String getAddress()
+    {
+        return address;
     }
     public void setName(String name)
     {
