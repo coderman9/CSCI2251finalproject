@@ -1,4 +1,7 @@
 //package database;
+//CSCI2251 Final Project
+//Client-Side Communication
+//Cesar Ornelas in collaboration with  AJ Fenton and Ben Anker
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -10,7 +13,7 @@ import java.util.Scanner;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 
-public class Client {
+public class ClientSideCommunications {
 	
 	private InetAddress ip;
 	private Socket s;
@@ -18,7 +21,7 @@ public class Client {
 	private ObjectOutputStream dos;
 	private ObjectInputStream dis;
 	
-	 public  Client(InetAddress ad) throws UnknownHostException, IOException  
+	 public  ClientSideCommunications(InetAddress ad) throws UnknownHostException, IOException  
 	    { 
 		 System.out.println("client setup");
 	        
@@ -87,7 +90,7 @@ public class Client {
           
 	public static void main (String[] args) {
 		byte[] ipAddr = new byte[]{(byte) 192, (byte) 168, 0, 1};
-		Client cl = null;
+		ClientSideCommunications cl = null;
 		Scanner scn= new Scanner(System.in);
 		
 			InetAddress icup = null;
@@ -99,7 +102,7 @@ public class Client {
 			}
 			try {
 				
-				 cl =new Client(icup);
+				 cl =new ClientSideCommunications(icup);
 			} catch (IOException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
