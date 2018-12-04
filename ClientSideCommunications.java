@@ -1,7 +1,5 @@
 //package database;
-//CSCI2251 Final Project
-//Client-Side Communication
-//Cesar Ornelas in collaboration with  AJ Fenton and Ben Anker
+
 
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -45,15 +43,16 @@ public class ClientSideCommunications {
 	       
 	            
 	    } 
-	public void send(String tosend) throws IOException {
+	public String[] send(String[] tosend) throws IOException {
 		
            
             dos.writeObject(tosend); 
               
             // If client sends exit,close this connection  
             // and then break from the while loop 
-            if(tosend.equals("Exit")) 
+            if(tosend[0].equals("Exit")) 
             { 
+            	
                 System.out.println("Closing this connection : " + s); 
                 s.close(); 
                 System.out.println("Connection closed");
@@ -64,29 +63,21 @@ public class ClientSideCommunications {
             } 
               
             // printing date or time as requested by client
-            if(!tosend.equals("Exit")) {
-            String received = null;
+            if(!tosend[0].equals("Exit")) {
+            String[] received = null;
 			try {
-				received = (String) dis.readObject();
+				received = (String[]) dis.readObject();
 			} catch (ClassNotFoundException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
 			} 
-            System.out.println(received);
+			System.out.print(received[0]);
+            return received;
             }
+			return null;
         } 
 	
-	public String recieve() throws IOException {
-		
-			try {
-				return (String) dis.readObject();
-			} catch (ClassNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-				return("Failed");
-			}
-		
-	}
+
           
 	public static void main (String[] args) {
 		byte[] ipAddr = new byte[]{(byte) 192, (byte) 168, 0, 1};
@@ -111,16 +102,13 @@ public class ClientSideCommunications {
 			while(true) {
 				
 
-                try {
-					
-				} catch (IOException e1) {
-					// TODO Auto-generated catch block
-					e1.printStackTrace();
-				} 
-                String tosend = scn.nextLine();
+                String get = scn.nextLine();
+                String[] tosend=new String[1];
+                tosend[0]=get;
                 try {
 					cl.send(tosend);
-					if(tosend.equals("Exit")) {
+					System.out.println(tosend[0]);
+					if(tosend[0].equals("Exit")) {
 						System.out.println("closing");
 						scn.close();
 						break;
