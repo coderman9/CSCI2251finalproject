@@ -81,6 +81,8 @@ public class DataBase
                     return setBilling(input.get(1), input.get(2));
                 case "getPastDue":
                     return getPastDue(input.get(1));
+                case "search":
+                    return search(input.get(1));
             }
         }
         catch(SQLException e)
@@ -94,7 +96,9 @@ public class DataBase
     {
         try
         {
-            ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"/lib/derbyrun.jar", "server", "start");
+            //switch comments on next two lines if on linux
+            //ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"/lib/derbyrun.jar", "server", "start");
+            ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"\\lib\\derbyrun.jar", "server", "start");
             pb.directory(new File("."));
             Process p = pb.start();
             Thread.sleep(4000);
@@ -107,7 +111,8 @@ public class DataBase
         ResultSet resultSet = statement.executeQuery(String.format("SELECT id, address, description, price, type FROM rentals WHERE id = %s", ID));
         ArrayList<String> result = new ArrayList<>();
         result.add("getRentalByID");
-        resultSet.next();
+        if(!resultSet.next())
+            return error;
         for(int i=1; i<=resultSet.getMetaData().getColumnCount(); i++)
         {
             result.add(resultSet.getObject(i).toString());
@@ -130,6 +135,8 @@ public class DataBase
         while(resultSet.next())
             result.add(resultSet.getObject(1).toString()+","+resultSet.getObject(2).toString());
         connection.close();
+        if(result.size()==1)
+            return error;
         return result;
     }
     private ArrayList<String> setRental(String rentalID, String start, String end, String tenantID) throws SQLException
@@ -208,6 +215,8 @@ public class DataBase
             for(int i=1; i<=resultSet.getMetaData().getColumnCount(); i++)
                 result.add(resultSet.getObject(i).toString());
         connection.close();
+        if(result.size()==1)
+            return error;
         return result;
     }
     private ArrayList<String> getBilling(String name, String date) throws SQLException //!!!
@@ -223,6 +232,8 @@ public class DataBase
         r.add("getBilling");
         while(rs.next())
             r.add(rs.getObject(1).toString()+","+rs.getObject(2).toString());
+        if(r.size()==1)
+            return error;
         return r;
     }
     private ArrayList<String> setBilling(String rentalID, String amount) throws SQLException //!!!
@@ -232,7 +243,6 @@ public class DataBase
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(String.format("SELECT owed FROM rentals WHERE id = %s", rentalID));
         long owed=0;
-        if(resultSet.next())
             owed = resultSet.getLong(1);
         owed+=Long.parseLong(amount);
         String s = String.format("UPDATE rentals SET owed = %s WHERE id = %s", owed, rentalID);
@@ -253,7 +263,20 @@ public class DataBase
         r.add("getPastDue");
         while(rs.next())
             r.add(rs.getObject(1).toString());
+        if(r.size()==1)
+            return error;
         return r;
     }
-    
+    private ArrayList<String> search(String q) throws SQLException
+    {
+        connection = DriverManager.getConnection(database_loc);
+        Statement statement = connection.createStatement();
+        String s = String.format("SELECT id FROM rentals WHERE description LIKE '%%%s%%' OR id IN (SELECT id FROM reservations WHERE tenantID IN (SELECT tenantID FROM people WHERE name LIKE '%%%s%%'))", q, q);
+        ResultSet rs = statement.executeQuery(s);
+        ArrayList<String> r = new ArrayList<String>();
+        r.add("search");
+        while(rs.next())
+            r.add(rs.getObject(1).toString());
+        return r;
+    }    
 }
