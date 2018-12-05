@@ -94,7 +94,7 @@ public class DataBase
         {
             ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"/lib/derbyrun.jar", "server", "start");
             pb.directory(new File("."));
-            Process p = pb.start();
+            pb.start();
             Thread.sleep(4000);
         }catch(Exception e){e.printStackTrace();}
     }
@@ -145,7 +145,6 @@ public class DataBase
             totalRowCount++;
         if(rowCount!=totalRowCount)
             return error;
-        ArrayList<String> r = new ArrayList<>();
         statement = connection.createStatement();
         statement.executeUpdate(String.format("INSERT INTO reservations VALUES(%s, %s, CAST('%s' as DATE), CAST('%s' as DATE))", tenantID, rentalID, start, end));
         connection.close();
