@@ -82,6 +82,8 @@ public class DataBase
                     return getBilling(input.get(1), input.get(2));
                 case "setBilling":
                     return setBilling(input.get(1), input.get(2));
+                case "getPastDue":
+                    return getPastDue(input.get(1));
             }
         }
         catch(SQLException e)
@@ -104,7 +106,6 @@ public class DataBase
     private ArrayList<String> getRentalByID(String ID) throws SQLException
     {
         connection = DriverManager.getConnection(database_loc);
-        //!!! need to add reserved dates
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(String.format("SELECT id, address, description, price, type FROM rentals WHERE id = %s", ID));
         ArrayList<String> result = new ArrayList<>();
@@ -116,19 +117,17 @@ public class DataBase
         }
         statement=connection.createStatement();
         ResultSet rs = statement.executeQuery(String.format("SELECT start, end_date FROM reservations WHERE rentalID = %s", ID));
-        for(int i=1; rs.next()&&i<=rs.getMetaData().getColumnCount(); i++)
-        {
-            result.add(rs.getObject(i).toString());
-        }
+        while(rs.next())
+            for(int i=1;i<=rs.getMetaData().getColumnCount(); i++)
+                result.add(rs.getObject(i).toString());
         connection.close();
         return result;
     }
     private ArrayList<String> getRentalByType(String type, String start, String end_date) throws SQLException
     {
-        //!!! do date stuff
         connection = DriverManager.getConnection(database_loc);
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(String.format("SELECT id, address FROM rentals WHERE type = '%s'", type));
+        ResultSet resultSet = statement.executeQuery(String.format("SELECT id, address FROM rentals WHERE type = '%s' AND id not in (SELECT rentalID FROM reservations WHERE (start BETWEEN CAST('%s' AS DATE) and CAST('%s' AS DATE)) OR (end_date BETWEEN CAST('%s' AS DATE) AND CAST('%s' AS DATE)))", type, start, end_date, start, end_date));
         ArrayList<String> result = new ArrayList<>();
         result.add("getRentalByType");
         while(resultSet.next())
@@ -137,11 +136,19 @@ public class DataBase
         return result;
     }
     private ArrayList<String> setRental(String rentalID, String start, String end, String tenantID) throws SQLException
-    {        
+    {
         connection = DriverManager.getConnection(database_loc);
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM reservations RIGHT JOIN rentals ON reservations.rentalID = rentals.id WHERE id = %s AND (CAST('%s' AS DATE)>reservations.end_date OR CAST('%s' AS DATE)<reservations.start OR reservations.start is null)", rentalID, start, end));
-        if(!resultSet.next())
+        ResultSet resultSet = statement.executeQuery(String.format("SELECT * FROM reservations WHERE rentalID = %s AND (CAST('%s' AS DATE)>reservations.end_date OR CAST('%s' AS DATE)<reservations.start) AND start IS NOT NULL", rentalID, start, end));
+        statement = connection.createStatement();
+        ResultSet rs = statement.executeQuery(String.format("SELECT * FROM reservations WHERE rentalID = %s", rentalID));
+        int rowCount = 0;
+        int totalRowCount = 0;
+        while(resultSet.next())
+            rowCount++;
+        while(rs.next())
+            totalRowCount++;
+        if(rowCount!=totalRowCount)
             return error;
         ArrayList<String> r = new ArrayList<>();
         statement = connection.createStatement();
@@ -206,29 +213,54 @@ public class DataBase
         connection.close();
         return result;
     }
-    private ArrayList<String> getBilling(String name, String date) throws SQLException
+    private ArrayList<String> getBilling(String name, String date) throws SQLException //!!!
     {
         connection = DriverManager.getConnection(database_loc);
         //have to return a list, where each element is the rentalID and amountowed for a certain rental, based on who is there at specified date
         //Statement stmt = connection.createStatement();
         //String s = String.format("SELECT 
         //connection.close();
-        return new ArrayList<String>();
+        String s = String.format("SELECT id, owed FROM rentals WHERE id IN (SELECT rentalID FROM reservations WHERE tenantID IN (SELECT tenantID FROM people WHERE name = '%s' AND billableMember = True)AND CAST('%s' AS DATE) BETWEEN start AND end_date)", name, date);
+        ResultSet rs = connection.createStatement().executeQuery(s);
+        ArrayList<String> r = new ArrayList<String>();
+        r.add("getBilling");
+        while(rs.next())
+            r.add(rs.getObject(1).toString()+","+rs.getObject(2).toString());
+        return r;
     }
-    private ArrayList<String> setBilling(String rentalID, String amount) throws SQLException
+    private ArrayList<String> setBilling(String rentalID, String amount) throws SQLException //!!!
     {
         //update the rental specified by rentalID by amount
         connection = DriverManager.getConnection(database_loc);
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(String.format("SELECT owed FROM rentals WHERE rentalID = %s", rentalID));
-        long owed = resultSet.getLong(1);
+        ResultSet resultSet = statement.executeQuery(String.format("SELECT owed FROM rentals WHERE id = %s", rentalID));
+        long owed=0;
+        if(resultSet.next())
+            owed = resultSet.getLong(1);
         owed+=Long.parseLong(amount);
-        String s = String.format("UPDATE rentals SET owed = %s WHERE rentalID = %s", owed, rentalID);
+        String s = String.format("UPDATE rentals SET owed = %s WHERE id = %s", owed, rentalID);
         statement = connection.createStatement();
         statement.executeUpdate(s);
         ArrayList<String> r = new ArrayList<>();
+        r.add("setBilling");
         r.add(Long.toString(owed));
         connection.close();
         return r;
     }
+    private ArrayList<String> getPastDue(String date) throws SQLException
+    {
+        connection = DriverManager.getConnection(database_loc);
+        //have to return a list, where each element is the rentalID and amountowed for a certain rental, based on who is there at specified date
+        //Statement stmt = connection.createStatement();
+        //String s = String.format("SELECT 
+        //connection.close();
+        String s = String.format("SELECT tenantID from reservations WHERE CAST('%s' AS DATE) BETWEEN start and end_date AND rentalID IN (SELECT rentalID FROM rentals WHERE owed>0) GROUP BY tenantID", date);
+        ResultSet rs = connection.createStatement().executeQuery(s);
+        ArrayList<String> r = new ArrayList<String>();
+        r.add("getPastDue");
+        while(rs.next())
+            r.add(rs.getObject(1).toString());
+        return r;
+    }
+    
 }
