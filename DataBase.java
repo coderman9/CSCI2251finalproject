@@ -37,7 +37,7 @@ public class DataBase
                 connection = DriverManager.getConnection(database_loc_uncreated);
                 connection.setAutoCommit(false);
                 Statement s = connection.createStatement();
-                s.addBatch("CREATE TABLE people (name VARCHAR(20), dob DATE, address VARCHAR(75), phone_number VARCHAR(13), id INTEGER GENERATED ALWAYS AS IDENTITY, tenantID INTEGER), billableMember BOOLEAN");
+                s.addBatch("CREATE TABLE people (name VARCHAR(20), dob DATE, address VARCHAR(75), phone_number VARCHAR(13), id INTEGER GENERATED ALWAYS AS IDENTITY, tenantID INTEGER, billableMember BOOLEAN)");
                 s.addBatch("CREATE TABLE tenants (tenantID INTEGER GENERATED ALWAYS AS IDENTITY)");
                 s.addBatch("CREATE TABLE rentals (id INTEGER GENERATED ALWAYS AS IDENTITY, address VARCHAR(75), description VARCHAR(300), price DOUBLE, type VARCHAR (15), owed DOUBLE)");
                 s.addBatch("CREATE TABLE reservations (tenantID INTEGER, rentalID INTEGER, start DATE, end_date DATE)");
