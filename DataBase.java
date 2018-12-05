@@ -145,7 +145,6 @@ public class DataBase
             totalRowCount++;
         if(rowCount!=totalRowCount)
             return error;
-        ArrayList<String> r = new ArrayList<>();
         statement = connection.createStatement();
         statement.executeUpdate(String.format("INSERT INTO reservations VALUES(%s, %s, CAST('%s' as DATE), CAST('%s' as DATE))", tenantID, rentalID, start, end));
         connection.close();
