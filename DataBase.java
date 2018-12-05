@@ -2,14 +2,12 @@ import java.sql.Connection;
 import java.sql.Statement;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
 import java.sql.PreparedStatement;
 import java.util.ArrayList;
 import java.lang.ProcessBuilder;
 import java.io.File;
 import java.lang.Class;
-import java.sql.Date;
 public class DataBase
 {
     private Connection connection;
@@ -30,9 +28,6 @@ public class DataBase
         try
         {
             connection = DriverManager.getConnection(database_loc);
-            Statement s = connection.createStatement();
-            ResultSet rs = s.executeQuery("SELECT * FROM people");
-            ResultSetMetaData rsmd = rs.getMetaData();
         }catch(SQLException e)
         {
             try
@@ -97,7 +92,7 @@ public class DataBase
     {
         try
         {
-            ProcessBuilder pb = new ProcessBuilder("java", "-jar", "/home/benjamin/derby/lib/derbyrun.jar", "server", "start");
+            ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"/lib/derbyrun.jar", "server", "start");
             pb.directory(new File("."));
             Process p = pb.start();
             Thread.sleep(4000);
