@@ -56,6 +56,8 @@ public class DataBase
     }
     public ArrayList<String> handle(ArrayList<String> input)
     {
+        for (int i=0; i<input.size(); i++)
+            input.set(i, input.get(i).replace("'", "''"));
         try
         {
             switch(input.get(0))
@@ -252,15 +254,15 @@ public class DataBase
         connection = DriverManager.getConnection(database_loc);
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(String.format("SELECT owed FROM rentals WHERE id = %s", rentalID));
-        long owed=0;
+        double owed=0;
         if(resultSet.next())
-            owed = resultSet.getLong(1);
-        owed+=Long.parseLong(amount);
+            owed = resultSet.getDouble(1);
+        owed+=Double.parseDouble(amount);
         String s = String.format("UPDATE rentals SET owed = %s WHERE id = %s", owed, rentalID);
         statement = connection.createStatement();
         statement.executeUpdate(s);
         ArrayList<String> r = new ArrayList<>();
-        r.add(Long.toString(owed));
+        r.add(Double.toString(owed));
         connection.close();
         return r;
     }
@@ -280,7 +282,7 @@ public class DataBase
     {
         connection = DriverManager.getConnection(database_loc);
         Statement statement = connection.createStatement();
-        String s = String.format("SELECT id FROM rentals WHERE description LIKE '%%%s%%' OR id IN (SELECT id FROM reservations WHERE tenantID IN (SELECT tenantID FROM people WHERE name LIKE '%%%s%%'))", q, q);
+        String s = String.format("SELECT id FROM rentals WHERE address LIKE '%%%s%%' OR description LIKE '%%%s%%' OR id IN (SELECT id FROM reservations WHERE tenantID IN (SELECT tenantID FROM people WHERE name LIKE '%%%s%%'))", q, q, q);
         ResultSet rs = statement.executeQuery(s);
         ArrayList<String> r = new ArrayList<String>();
 
