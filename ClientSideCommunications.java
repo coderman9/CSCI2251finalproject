@@ -7,14 +7,10 @@ import java.net.InetAddress;
 import java.net.Socket;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
-// test function
-import java.util.Scanner;
+
 
 public class ClientSideCommunications {
-
-	private InetAddress ip;
 	private Socket s;
-
 	private ObjectOutputStream dos;
 	private ObjectInputStream dis;
 
@@ -30,6 +26,7 @@ public class ClientSideCommunications {
 	           //dos.flush();
 	           dis = new ObjectInputStream(s.getInputStream());
 	    }
+	@SuppressWarnings("unchecked")
 	public ArrayList<String> send(ArrayList<String> tosend) throws IOException {
 		dos.flush();
 		dos.writeObject(tosend);
@@ -40,6 +37,7 @@ public class ClientSideCommunications {
 				received = (ArrayList<String>) dis.readObject();
 				
 			} catch (ClassNotFoundException e) {
+				
 				received.add("ClassNotFoundException");
 				e.printStackTrace();
 			}
