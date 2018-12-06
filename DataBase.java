@@ -18,6 +18,7 @@ public class DataBase
     private final String driver = "org.apache.derby.jdbc.ClientDriver";
     private final String database_loc_uncreated="jdbc:derby://localhost:1527/rental_database;create=true";
     private final String database_loc="jdbc:derby://localhost:1527/rental_database";
+    private static final String shutdown_database = "jdbc:derby://localhost:1527/rental_database;shutdown=true";
     public DataBase()
     {
         error.add("Nak");
@@ -91,6 +92,19 @@ public class DataBase
             return error;
         }
         return error;
+    }
+    public static void shutdown()
+    {
+        try
+        {
+            DriverManager.getConnection(shutdown_database);
+            //switch comments on next two lines if on linux
+            ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"/lib/derbyrun.jar", "server", "start");
+            //ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"\\lib\\derbyrun.jar", "server", "start");
+            pb.directory(new File("."));
+            Process p = pb.start();
+            Thread.sleep(4000);
+        }catch(Exception e){}
     }
     public void startSQLServer()
     {
