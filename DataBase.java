@@ -142,12 +142,12 @@ public class DataBase
     {
         connection = DriverManager.getConnection(database_loc);
         Statement statement = connection.createStatement();
-        ResultSet resultSet = statement.executeQuery(String.format("SELECT id, address FROM rentals WHERE type = '%s' AND id not in (SELECT rentalID FROM reservations WHERE (start BETWEEN CAST('%s' AS DATE) and CAST('%s' AS DATE)) OR (end_date BETWEEN CAST('%s' AS DATE) AND CAST('%s' AS DATE)))", type, start, end_date, start, end_date));
+        ResultSet resultSet = statement.executeQuery(String.format("SELECT id, address FROM rentals WHERE type = '%s' AND id not in (SELECT rentalID FROM reservations WHERE (CAST('%s' AS DATE) BETWEEN start and end_date) OR (CAST('%s' AS DATE) BETWEEN start and end_date))", type, start, end_date, start, end_date));
         ArrayList<String> result = new ArrayList<>();
         while(resultSet.next())
             result.add(resultSet.getObject(1).toString()+","+resultSet.getObject(2).toString());
         connection.close();
-        if(result.size()==1)
+        if(result.size()==0)
             return error;
         return result;
     }
@@ -226,7 +226,7 @@ public class DataBase
             for(int i=1; i<=resultSet.getMetaData().getColumnCount(); i++)
                 result.add(resultSet.getObject(i).toString());
         connection.close();
-        if(result.size()==1)
+        if(result.size()==0)
             return error;
         return result;
     }
@@ -242,7 +242,7 @@ public class DataBase
         ArrayList<String> r = new ArrayList<String>();
         while(rs.next())
             r.add(rs.getObject(1).toString()+","+rs.getObject(2).toString());
-        if(r.size()==1)
+        if(r.size()==0)
             return error;
         return r;
     }
@@ -253,6 +253,7 @@ public class DataBase
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(String.format("SELECT owed FROM rentals WHERE id = %s", rentalID));
         long owed=0;
+        if(resultSet.next())
             owed = resultSet.getLong(1);
         owed+=Long.parseLong(amount);
         String s = String.format("UPDATE rentals SET owed = %s WHERE id = %s", owed, rentalID);
@@ -271,7 +272,7 @@ public class DataBase
         ArrayList<String> r = new ArrayList<String>();
         while(rs.next())
             r.add(rs.getObject(1).toString());
-        if(r.size()==1)
+        if(r.size()==0)
             return error;
         return r;
     }
