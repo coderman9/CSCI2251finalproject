@@ -10,8 +10,10 @@ import java.util.ArrayList;
 
 
 public class ServerSideCommunications {
-
+	
+	
 	 public static void main(String[] args) throws IOException
+	
 	    {
 		 Runtime.getRuntime().addShutdownHook(new Thread() {
 		        public void run() {
@@ -22,6 +24,7 @@ public class ServerSideCommunications {
 	    
 	        // server is listening on port 5056
 		 ServerSocket ss = new ServerSocket(5056);
+		 System.out.println("Server is up");
 
 	        // running infinite loop for getting
 	        // client request
@@ -100,7 +103,9 @@ class ClientHandler extends Thread
 								System.out.println(received);
 
 								} catch (ClassNotFoundException e) {
-									received.add("ClassNotFoundException");
+									ArrayList<String>ERROR=new ArrayList<String>();
+									ERROR.add("Nak");
+									received=ERROR;
 									e.printStackTrace();
 								}
 								if (received.get(0).equals("Exit")){
@@ -114,24 +119,23 @@ class ClientHandler extends Thread
 				}
 								// sends what it received to data base and send back
 								//database result
-								dos.writeObject(DB.handles(received));
+								dos.writeObject(DB.handle(received));
 								//dos.writeObject(received);
 								
             } catch (IOException e) {
-                e.printStackTrace();
-								//connection lost
-								// allows thread to exit since we don't want to reconnect
+                //e.printStackTrace();
+				//connection lost
+				// allows thread to exit since we don't want to reconnect
 								
-								try {
-									dis.close();
-									dos.close();
-									s.close();
-								} catch (IOException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
-								}
-								
-								break;
+            	try {
+            		dis.close();
+            		dos.close();
+            		s.close();
+				} catch (IOException e1) {
+				// TODO Auto-generated catch block
+					e1.printStackTrace();
+								}				
+				break;
             }
             
         }
