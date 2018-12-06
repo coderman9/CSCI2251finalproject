@@ -97,8 +97,8 @@ public class DataBase
         try
         {
             //switch comments on next two lines if on linux
-            //ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"/lib/derbyrun.jar", "server", "start");
-            ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"\\lib\\derbyrun.jar", "server", "start");
+            ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"/lib/derbyrun.jar", "server", "start");
+            //ProcessBuilder pb = new ProcessBuilder("java", "-jar", System.getenv("DERBY_HOME")+"\\lib\\derbyrun.jar", "server", "start");
             pb.directory(new File("."));
             Process p = pb.start();
             Thread.sleep(4000);
@@ -110,7 +110,6 @@ public class DataBase
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(String.format("SELECT id, address, description, price, type FROM rentals WHERE id = %s", ID));
         ArrayList<String> result = new ArrayList<>();
-        result.add("getRentalByID");
         if(!resultSet.next())
             return error;
         for(int i=1; i<=resultSet.getMetaData().getColumnCount(); i++)
@@ -131,7 +130,6 @@ public class DataBase
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(String.format("SELECT id, address FROM rentals WHERE type = '%s' AND id not in (SELECT rentalID FROM reservations WHERE (start BETWEEN CAST('%s' AS DATE) and CAST('%s' AS DATE)) OR (end_date BETWEEN CAST('%s' AS DATE) AND CAST('%s' AS DATE)))", type, start, end_date, start, end_date));
         ArrayList<String> result = new ArrayList<>();
-        result.add("getRentalByType");
         while(resultSet.next())
             result.add(resultSet.getObject(1).toString()+","+resultSet.getObject(2).toString());
         connection.close();
@@ -170,7 +168,7 @@ public class DataBase
         key.next();
         long id = key.getLong(1);
         ArrayList<String> r = new ArrayList<>();
-        r.add("addPerson");r.add(Long.toString(id));
+        r.add(Long.toString(id));
         connection.close();
         return r;
     }
@@ -210,7 +208,6 @@ public class DataBase
         Statement statement = connection.createStatement();
         ResultSet resultSet = statement.executeQuery(String.format("SELECT id FROM people WHERE name = '%s' AND billableMember = TRUE", name));
         ArrayList<String> result = new ArrayList<>();
-        result.add("getTenant");
         while(resultSet.next())
             for(int i=1; i<=resultSet.getMetaData().getColumnCount(); i++)
                 result.add(resultSet.getObject(i).toString());
@@ -229,7 +226,6 @@ public class DataBase
         String s = String.format("SELECT id, owed FROM rentals WHERE id IN (SELECT rentalID FROM reservations WHERE tenantID IN (SELECT tenantID FROM people WHERE name = '%s' AND billableMember = True)AND CAST('%s' AS DATE) BETWEEN start AND end_date)", name, date);
         ResultSet rs = connection.createStatement().executeQuery(s);
         ArrayList<String> r = new ArrayList<String>();
-        r.add("getBilling");
         while(rs.next())
             r.add(rs.getObject(1).toString()+","+rs.getObject(2).toString());
         if(r.size()==1)
@@ -249,7 +245,6 @@ public class DataBase
         statement = connection.createStatement();
         statement.executeUpdate(s);
         ArrayList<String> r = new ArrayList<>();
-        r.add("setBilling");
         r.add(Long.toString(owed));
         connection.close();
         return r;
@@ -260,7 +255,6 @@ public class DataBase
         String s = String.format("SELECT tenantID from reservations WHERE CAST('%s' AS DATE) BETWEEN start and end_date AND rentalID IN (SELECT rentalID FROM rentals WHERE owed>0) GROUP BY tenantID", date);
         ResultSet rs = connection.createStatement().executeQuery(s);
         ArrayList<String> r = new ArrayList<String>();
-        r.add("getPastDue");
         while(rs.next())
             r.add(rs.getObject(1).toString());
         if(r.size()==1)
@@ -274,7 +268,7 @@ public class DataBase
         String s = String.format("SELECT id FROM rentals WHERE description LIKE '%%%s%%' OR id IN (SELECT id FROM reservations WHERE tenantID IN (SELECT tenantID FROM people WHERE name LIKE '%%%s%%'))", q, q);
         ResultSet rs = statement.executeQuery(s);
         ArrayList<String> r = new ArrayList<String>();
-        r.add("search");
+
         while(rs.next())
             r.add(rs.getObject(1).toString());
         return r;
