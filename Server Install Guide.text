@@ -1,0 +1,24 @@
+Server Installation Guide
+
+Step 1
+Ensure Apache Derby is installed on your machine. Your Help Desk or Technical Support can assist you as needed on this.
+
+Step 2
+Ensure Java Standard Edition, version 8 is installed on your machine. Make sure to select the correct product for your computer. Your Help Desk or Technical Support can assist you as needed on this.
+
+Step 3
+Set 3 environment variables. JAVA_HOME should equal the main java directory (perhaps /usr/lib/jvm/java for example), DERBY_HOME should equal the main derby directory (perhaps ~/derby) and $DERBY_HOME/lib/derby.jar:$DERBY_HOME/lib/derbytools.jar:.:$DERBY_HOME/lib/derbyclient.jar:$DERBY_HOME/lib/derbyrun.jar
+should be added to the class path variable. Note: if using windows, %DERBY_HOME%/lib/derby.jar;%DERBY_HOME%/lib/derbytools.jar;.;%DERBY_HOME%/lib/derbyclient.jar;%DERBY_HOME%/lib/derbyrun.jar should be added to the classpath instead.
+
+Step 4
+Double click the server.jar package, or run java -jar server.jar on the command line.
+
+Troubleshooting
+Q: "Nothing happens when I click the file?"
+A: Make sure that you have successfully followed steps 1 through 3.
+
+Q: "I thought that no one ever reads the installation guide?"
+A: Don't worry, Pending Group makes sure to take care and provide extra detailed attention for everyone who reads carefully.
+
+Q: "I followed the Steps, but I can't make anything happen."
+A: Ensure that all environment variables are set correctly. If problem persists, contact support via e-mail
