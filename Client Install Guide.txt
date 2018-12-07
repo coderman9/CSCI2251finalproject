@@ -4,7 +4,7 @@ Step 1
 Ensure that You or your Server Administrator has completed the Server Installation Guide, and that the server is running.
 
 Step 2
-You or your Server Administrator should provide the local IP address of the server. This should be saved in a file called config.cfg.
+You or your Server Administrator should provide the local IP address of the server. This should be saved as the first line in a file called config.cfg.
 Note: This step is not needed if the Server is installed on the same machine you aare planning to run the client on.
 
 Step 3
