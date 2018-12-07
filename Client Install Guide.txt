@@ -5,7 +5,7 @@ Ensure that You or your Server Administrator has completed the Server Installati
 
 Step 2
 You or your Server Administrator should provide the local IP address of the server. This should be saved in a file called config.cfg.
-Note: This step is not needed if the Server is installed on the same machine you aare planning to run the client on.
+Note: This step is not needed if the Server is installed on the same machine you are planning to run the client on.
 
 Step 3
 Install Java Standard Edition, version 8 on your machine. Make sure to select the correct product for your computer. Your Help Desk or Technical Support can assist you as needed on this.
