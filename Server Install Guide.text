@@ -11,7 +11,7 @@ Set 3 environment variables. JAVA_HOME should equal the main java directory (per
 should be added to the class path variable. Note: if using windows, %DERBY_HOME%/lib/derby.jar;%DERBY_HOME%/lib/derbytools.jar;.;%DERBY_HOME%/lib/derbyclient.jar;%DERBY_HOME%/lib/derbyrun.jar should be added to the classpath instead.
 
 Step 4
-Double click the server.jar package, or run java -jar server.jar on the command line.
+Run javac ServerSideCommunications.java, then java ServerSideCommunications
 
 Troubleshooting
 Q: "Nothing happens when I click the file?"
