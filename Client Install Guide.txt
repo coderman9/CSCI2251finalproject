@@ -1,0 +1,28 @@
+Client Installation Guide
+
+Step 1
+Ensure that You or your Server Administrator has completed the Server Installation Guide, and that the server is running.
+
+Step 2
+You or your Server Administrator should provide the local IP address of the server. This should be saved in a file called config.cfg.
+Note: This step is not needed if the Server is installed on the same machine you aare planning to run the client on.
+
+Step 3
+Install Java Standard Edition, version 8 on your machine. Make sure to select the correct product for your computer. Your Help Desk or Technical Support can assist you as needed on this.
+
+Step 4
+Double click on the ClientGUI.jar file.
+
+
+Troubleshooting
+Q: "Nothing happens when I click the file?"
+A: Make sure that you have successfully followed steps 1 through 3.
+
+Q: "I've got a big box on my screen after I clicked on it, but nothing happens!"
+A: Maximize the window, and then navigate to the buttons across the top with your mouse. Click on a button in order to view/enter data associated with the selected action.
+
+Q: "I thought that no one ever reads the installation guide?"
+A: Don't worry, Pending Group makes sure to take care and provide extra detailed attention for everyone who reads carefully.
+
+Q: "I followed the Steps, but I can't make anything happen."
+A: Ensure that your config.cfg file is located in the same directory that the ClientGUI.jar file you are attempting to run is, if problem persists, contact support via e-mail 
